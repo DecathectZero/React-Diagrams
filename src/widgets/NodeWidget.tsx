@@ -21,8 +21,11 @@ export class NodeWidget extends BaseWidget<NodeProps, NodeState> {
 		this.state = {};
 	}
 
-	shouldComponentUpdate() {
-		return this.props.diagramEngine.canEntityRepaint(this.props.node);
+	shouldComponentUpdate(next) {
+		return (this.props.node.x !== next.node.x || 
+			this.props.node.y !== next.node.y || 
+			this.props.node.width !== next.node.width);
+		// this.props.diagramEngine.canEntityRepaint(this.props.node);
 	}
 
 	getClassName() {
