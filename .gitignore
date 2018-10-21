@@ -1,6 +1,6 @@
-dist/
+# dist/
 # dist/main.js
-dist/main.js.map
+# dist/main.js.map
 /package
 *.tgz
 @types/
