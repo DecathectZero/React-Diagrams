@@ -16,16 +16,22 @@ export interface NodeState {}
  * @author Dylan Vorster
  */
 export class NodeWidget extends BaseWidget<NodeProps, NodeState> {
+	selected: boolean;
+
 	constructor(props: NodeProps) {
 		super("srd-node", props);
-		this.state = {};
+
+		this.state = {}
+		this.selected = false;
 	}
 
 	shouldComponentUpdate(next) {
-		return (this.props.node.x !== next.node.x || 
-			this.props.node.y !== next.node.y || 
-			this.props.node.width !== next.node.width);
-		// this.props.diagramEngine.canEntityRepaint(this.props.node);
+		let selected = next.node.isSelected();
+		let next_select = (selected || (this.selected != selected));
+		
+		this.selected = selected;
+
+		return next_select;
 	}
 
 	getClassName() {
