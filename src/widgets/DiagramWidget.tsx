@@ -238,6 +238,8 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 			this.state.action.mouseX2 = relative.x;
 			this.state.action.mouseY2 = relative.y;
 
+			// diagramEngine.enableRepaintEntities(diagramEngine.getDiagramModel().getSelectedItems());
+
 			this.fireAction();
 			this.setState({ action: this.state.action });
 			return;
@@ -278,6 +280,8 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 				diagramEngine.calculateCanvasMatrix();
 			}
 
+			// diagramEngine.enableRepaintEntities(diagramEngine.getDiagramModel().getSelectedItems());
+
 			this.fireAction();
 			if (!this.state.wasMoved) {
 				this.setState({ wasMoved: true });
@@ -285,6 +289,9 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 				this.forceUpdate();
 			}
 		} else if (this.state.action instanceof MoveCanvasAction) {
+
+			diagramEngine.enableRepaintEntities([]);
+
 			//translate the actual canvas
 			if (this.props.allowCanvasTranslation) {
 				diagramModel.setOffset(
@@ -390,10 +397,13 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 				}
 			});
 
-			diagramEngine.clearRepaintEntities();
+			// diagramEngine.enableRepaintEntities(diagramEngine.getDiagramModel().getSelectedItems());
+
+			// diagramEngine.clearRepaintEntities();
 			this.stopFiringAction(!this.state.wasMoved);
 		} else {
-			diagramEngine.clearRepaintEntities();
+			// diagramEngine.clearRepaintEntities();
+			diagramEngine.enableRepaintEntities([]);
 			this.stopFiringAction();
 		}
 		this.state.document.removeEventListener("mousemove", this.onMouseMove);
@@ -420,6 +430,8 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 		diagramEngine.setMaxNumberPointsPerLink(this.props.maxNumberPointsPerLink);
 		diagramEngine.setSmartRoutingStatus(this.props.smartRouting);
 		var diagramModel = diagramEngine.getDiagramModel();
+
+		diagramEngine.enableRepaintEntities(diagramModel.getSelectedItems());
 
 		return (
 			<div
@@ -491,6 +503,7 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 							diagramModel.clearSelection();
 							this.startFiringAction(new MoveCanvasAction(event.clientX, event.clientY, diagramModel));
 						}
+						diagramEngine.enableRepaintEntities([]);
 					} else if (model.model instanceof PortModel) {
 						//its a port element, we want to drag a link
 						if (!this.props.diagramEngine.isModelLocked(model.model)) {
@@ -520,6 +533,7 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 						} else {
 							diagramModel.clearSelection();
 						}
+						// diagramEngine.enableRepaintEntities(diagramEngine.getDiagramModel().getSelectedItems());
 					} else {
 						//its some or other element, probably want to move it
 						if (!event.shiftKey && !model.model.isSelected()) {
@@ -527,6 +541,7 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 						}
 						model.model.setSelected(true);
 
+						// diagramEngine.enableRepaintEntities(diagramEngine.getDiagramModel().getSelectedItems());
 						this.startFiringAction(new MoveItemsAction(event.clientX, event.clientY, diagramEngine));
 					}
 					this.state.document.addEventListener("mousemove", this.onMouseMove);

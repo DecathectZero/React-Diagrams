@@ -43,6 +43,9 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 	diagramModel: DiagramModel;
 	canvas: Element;
 	paintableWidgets: {};
+	p1: {};
+	p2: {};
+	superSelect: NodeModel;
 	linksThatHaveInitiallyRendered: {};
 	nodesRendered: boolean;
 	maxNumberPointsPerLink: number;
@@ -62,8 +65,11 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 		this.linkFactories = {};
 		this.portFactories = {};
 		this.labelFactories = {};
+		this.superSelect = null;
 		this.canvas = null;
 		this.paintableWidgets = null;
+		this.p1 = null;
+		this.p2 = null;
 		this.linksThatHaveInitiallyRendered = {};
 
 		if (Toolkit.TESTING) {
@@ -95,8 +101,19 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 		this.paintableWidgets = null;
 	}
 
+	hasRepaint(){
+		return !(_.isEmpty(this.paintableWidgets) && _.isEmpty(this.p2));
+	}
+
 	enableRepaintEntities(entities: BaseModel<BaseEntity, BaseModelListener>[]) {
+
+		if(!_.isEmpty(this.paintableWidgets)){
+			this.p2 = this.p1;
+			this.p1 = this.paintableWidgets;
+		}
+
 		this.paintableWidgets = {};
+
 		entities.forEach(entity => {
 			//if a node is requested to repaint, add all of its links
 			if (entity instanceof NodeModel) {
@@ -133,13 +150,25 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 		this.linksThatHaveInitiallyRendered = {};
 	}
 
+	getSuperSelect(){
+		return this.superSelect
+	}
+
+	setSuperSelect(node){
+		this.superSelect = node;
+	}
+
 	canEntityRepaint(baseModel: BaseModel<BaseEntity, BaseModelListener>) {
 		//no rules applied, allow repaint
 		if (this.paintableWidgets === null) {
 			return true;
+		}else if (this.p2 !== null){
+			return (this.paintableWidgets[baseModel.getID()] !== undefined || this.p2[baseModel.getID()] !== undefined);
+		}else if(this.superSelect !== null){
+			return baseModel.getID() === this.superSelect.getID();
+		}else{
+			return this.paintableWidgets[baseModel.getID()] !== undefined;
 		}
-
-		return this.paintableWidgets[baseModel.getID()] !== undefined;
 	}
 
 	setCanvas(canvas: Element | null) {
