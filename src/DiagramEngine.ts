@@ -162,13 +162,16 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 		//no rules applied, allow repaint
 		if (this.paintableWidgets === null) {
 			return true;
-		}else if (this.p2 !== null){
-			return (this.paintableWidgets[baseModel.getID()] !== undefined || this.p2[baseModel.getID()] !== undefined);
-		}else if(this.superSelect !== null){
-			return baseModel.getID() === this.superSelect.getID();
-		}else{
-			return this.paintableWidgets[baseModel.getID()] !== undefined;
 		}
+		if(this.superSelect !== null && (baseModel.getID() === this.superSelect.getID())){
+			return true;
+		}
+		if (this.p2 !== null && 
+			(this.paintableWidgets[baseModel.getID()] !== undefined || 
+				this.p2[baseModel.getID()] !== undefined)){
+			return true;
+		}
+		return this.paintableWidgets[baseModel.getID()] !== undefined;
 	}
 
 	setCanvas(canvas: Element | null) {
