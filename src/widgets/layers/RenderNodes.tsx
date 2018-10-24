@@ -19,7 +19,8 @@ export class RenderNodes extends BaseWidget<NodeLayerProps, NodeLayerState> {
 	}
 
 	shouldComponentUpdate() {
-		return this.props.diagramEngine.hasRepaint();
+		// console.log(this.props.diagramEngine.getMove());
+		return !this.props.diagramEngine.getMove();
 	}
 
 	updateNodeDimensions = () => {

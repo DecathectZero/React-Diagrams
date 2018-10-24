@@ -19,7 +19,7 @@ export class RenderLinks extends BaseWidget<LinkLayerProps, LinkLayerState> {
 	}
 
 	shouldComponentUpdate() {
-		return this.props.diagramEngine.hasRepaint();
+		return !this.props.diagramEngine.getMove();
 	}
 
 	render() {

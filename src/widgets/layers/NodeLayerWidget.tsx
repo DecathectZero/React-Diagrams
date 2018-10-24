@@ -4,6 +4,7 @@ import * as _ from "lodash";
 import { NodeWidget } from "../NodeWidget";
 import { NodeModel } from "../../models/NodeModel";
 import { BaseWidget, BaseWidgetProps } from "../BaseWidget";
+import { RenderNodes } from "./RenderNodes";
 
 export interface NodeLayerProps extends BaseWidgetProps {
 	diagramEngine: DiagramEngine;
@@ -17,19 +18,19 @@ export class NodeLayerWidget extends BaseWidget<NodeLayerProps, NodeLayerState> 
 		this.state = {};
 	}
 
-	updateNodeDimensions = () => {
-		if (!this.props.diagramEngine.nodesRendered) {
-			const diagramModel = this.props.diagramEngine.getDiagramModel();
-			_.map(diagramModel.getNodes(), node => {
-				node.updateDimensions(this.props.diagramEngine.getNodeDimensions(node));
-			});
-		}
-	};
+	// updateNodeDimensions = () => {
+	// 	if (!this.props.diagramEngine.nodesRendered) {
+	// 		const diagramModel = this.props.diagramEngine.getDiagramModel();
+	// 		_.map(diagramModel.getNodes(), node => {
+	// 			node.updateDimensions(this.props.diagramEngine.getNodeDimensions(node));
+	// 		});
+	// 	}
+	// };
 
-	componentDidUpdate() {
-		this.updateNodeDimensions();
-		this.props.diagramEngine.nodesRendered = true;
-	}
+	// componentDidUpdate() {
+	// 	this.updateNodeDimensions();
+	// 	this.props.diagramEngine.nodesRendered = true;
+	// }
 
 	render() {
 		var diagramModel = this.props.diagramEngine.getDiagramModel();
@@ -47,17 +48,7 @@ export class NodeLayerWidget extends BaseWidget<NodeLayerProps, NodeLayerState> 
 						")"
 				}}
 			>
-				{_.map(diagramModel.getNodes(), (node: NodeModel) => {
-					return React.createElement(
-						NodeWidget,
-						{
-							diagramEngine: this.props.diagramEngine,
-							key: node.id,
-							node: node
-						},
-						this.props.diagramEngine.generateWidgetForNode(node)
-					);
-				})}
+				<RenderNodes diagramEngine={this.props.diagramEngine}/>
 			</div>
 		);
 	}

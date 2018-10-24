@@ -43,8 +43,7 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 	diagramModel: DiagramModel;
 	canvas: Element;
 	paintableWidgets: {};
-	p1: {};
-	p2: {};
+	moving: boolean;
 	superSelect: NodeModel;
 	linksThatHaveInitiallyRendered: {};
 	nodesRendered: boolean;
@@ -68,8 +67,7 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 		this.superSelect = null;
 		this.canvas = null;
 		this.paintableWidgets = null;
-		this.p1 = null;
-		this.p2 = null;
+		this.moving = false;
 		this.linksThatHaveInitiallyRendered = {};
 
 		if (Toolkit.TESTING) {
@@ -102,15 +100,22 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 	}
 
 	hasRepaint(){
-		return !(_.isEmpty(this.paintableWidgets) && _.isEmpty(this.p2));
+		return !(_.isEmpty(this.paintableWidgets));
+	}
+
+	startMove(){
+		this.moving = true;
+	}
+
+	stopMove(){
+		this.moving = false;
+	}
+
+	getMove(){
+		return this.moving;
 	}
 
 	enableRepaintEntities(entities: BaseModel<BaseEntity, BaseModelListener>[]) {
-
-		if(!_.isEmpty(this.paintableWidgets)){
-			this.p2 = this.p1;
-			this.p1 = this.paintableWidgets;
-		}
 
 		this.paintableWidgets = {};
 
@@ -164,11 +169,6 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 			return true;
 		}
 		if(this.superSelect !== null && (baseModel.getID() === this.superSelect.getID())){
-			return true;
-		}
-		if (this.p2 !== null && 
-			(this.paintableWidgets[baseModel.getID()] !== undefined || 
-				this.p2[baseModel.getID()] !== undefined)){
 			return true;
 		}
 		return this.paintableWidgets[baseModel.getID()] !== undefined;
