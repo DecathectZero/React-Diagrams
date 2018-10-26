@@ -29,6 +29,10 @@ export class BaseEntity<T extends BaseListener = BaseListener> {
 		this.locked = false;
 	}
 
+	resetID() {
+		this.id = Toolkit.UID();
+	}
+
 	getID() {
 		return this.id;
 	}
