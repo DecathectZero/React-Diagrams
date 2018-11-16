@@ -37,7 +37,7 @@ export class NodeWidget extends BaseWidget<NodeProps, NodeState> {
 	}
 
 	getClassName() {
-		return "node " + super.getClassName() + (this.props.node.isSelected() || this.props.diagramEngine.getSuperSelect().id === this.props.node.id ? this.bem("--selected") : "");
+		return "node " + super.getClassName() + (this.props.node.isSelected() || (this.props.diagramEngine.getSuperSelect() && this.props.diagramEngine.getSuperSelect().id === this.props.node.id) ? this.bem("--selected") : "");
 	}
 
 	render() {
