@@ -25,7 +25,7 @@ export interface DefaultLinkState {
 export class DefaultLinkWidget extends BaseWidget<DefaultLinkProps, DefaultLinkState> {
 	public static defaultProps: DefaultLinkProps = {
 		color: "black",
-		width: 3,
+		width: 1,
 		link: null,
 		engine: null,
 		smooth: false,
