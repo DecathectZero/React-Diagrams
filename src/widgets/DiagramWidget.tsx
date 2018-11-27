@@ -423,8 +423,6 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 		diagramEngine.setSmartRoutingStatus(this.props.smartRouting);
 		var diagramModel = diagramEngine.getDiagramModel();
 
-		diagramEngine.enableRepaintEntities(diagramModel.getSelectedItems());
-
 		return (
 			<div
 				{...this.getProps()}
@@ -434,7 +432,7 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 					}
 				}}
 				onWheel={event => {
-
+						diagramEngine.clearRepaintEntities();
 						diagramEngine.startMove();
 
 					// if (this.props.allowCanvasZoom) {
@@ -490,6 +488,7 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 					var model = this.getMouseElement(event);
 					//the canvas was selected
 					if (model === null) {
+						diagramEngine.clearRepaintEntities();
 						//is it a multiple selection
 						if (event.shiftKey) {
 							var relative = diagramEngine.getRelativePoint(event.clientX, event.clientY);
@@ -501,6 +500,7 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 							this.startFiringAction(new MoveCanvasAction(event.clientX, event.clientY, diagramModel));
 						}
 					} else if (model.model instanceof PortModel) {
+						diagramEngine.enableRepaintEntities(diagramModel.getSelectedItems());
 						//its a port element, we want to drag a link
 						if (!this.props.diagramEngine.isModelLocked(model.model)) {
 							var relative = diagramEngine.getRelativeMousePoint(event);
@@ -530,6 +530,7 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 							diagramModel.clearSelection();
 						}
 					} else {
+						diagramEngine.enableRepaintEntities(diagramModel.getSelectedItems());
 						//its some or other element, probably want to move it
 						if (!event.shiftKey && !model.model.isSelected()) {
 							diagramModel.clearSelection();
