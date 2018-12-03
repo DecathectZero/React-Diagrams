@@ -60,6 +60,8 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 
 	onKeyUpPointer: (this: Window, ev: KeyboardEvent) => void = null;
 
+	repaint: boolean
+
 	constructor(props: DiagramProps) {
 		super("srd-diagram", props);
 		this.onMouseMove = this.onMouseMove.bind(this);
@@ -72,6 +74,7 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 			diagramEngineListener: null,
 			document: null
 		};
+		this.repaint = false
 	}
 
 	componentWillUnmount() {
@@ -86,7 +89,10 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 		if (this.props.diagramEngine !== nextProps.diagramEngine) {
 			this.props.diagramEngine.removeListener(this.state.diagramEngineListener);
 			const diagramEngineListener = nextProps.diagramEngine.addListener({
-				repaintCanvas: () => this.forceUpdate()
+				repaintCanvas: () => {
+					this.repaint = true
+					this.forceUpdate()
+				}
 			});
 			this.setState({ diagramEngineListener });
 		}
@@ -422,6 +428,12 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 		diagramEngine.setMaxNumberPointsPerLink(this.props.maxNumberPointsPerLink);
 		diagramEngine.setSmartRoutingStatus(this.props.smartRouting);
 		var diagramModel = diagramEngine.getDiagramModel();
+
+		if(this.repaint){
+			diagramEngine.clearRepaintEntities()
+			diagramEngine.stopMove()
+			this.repaint = false
+		}
 
 		return (
 			<div
