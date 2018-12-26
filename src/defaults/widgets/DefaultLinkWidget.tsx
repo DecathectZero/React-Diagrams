@@ -50,6 +50,8 @@ export class DefaultLinkWidget extends BaseWidget<DefaultLinkProps, DefaultLinkS
 		if (props.diagramEngine.isSmartRoutingEnabled()) {
 			this.pathFinding = new PathFinding(this.props.diagramEngine);
 		}
+
+
 	}
 
 	calculateAllLabelPosition() {
@@ -83,6 +85,7 @@ export class DefaultLinkWidget extends BaseWidget<DefaultLinkProps, DefaultLinkS
 			this.props.pointAdded(point, event);
 		}
 	};
+
 
 	generatePoint(pointIndex: number): JSX.Element {
 		let x = this.props.link.points[pointIndex].x;
@@ -144,7 +147,7 @@ export class DefaultLinkWidget extends BaseWidget<DefaultLinkProps, DefaultLinkS
 			(props.diagramEngine.getFactoryForLink(this.props.link) as DefaultLinkFactory).generateLinkSegment(
 				this.props.link,
 				this,
-				this.state.selected || this.props.link.isSelected(),
+				this.state.selected || this.props.link.selected,
 				path
 			),
 			{
