@@ -320,10 +320,10 @@ export class DefaultLinkWidget extends BaseWidget<DefaultLinkProps, DefaultLinkS
 
 				//some defensive programming to make sure the smoothing is
 				//always in the right direction
-				if (pointLeft[xOrY] > pointRight[xOrY]) {
-					pointLeft = points[1];
-					pointRight = points[0];
-				}
+				// if (pointLeft[xOrY] > pointRight[xOrY]) {
+				// 	pointLeft = points[1];
+				// 	pointRight = points[0];
+				// }
 
 				paths.push(
 					this.generateLink(
