@@ -28,7 +28,7 @@ export interface DiagramEngineListener extends BaseListener {
 
 	labelFactoriesUpdated?(): void;
 
-	repaintCanvas?(): void;
+	repaintCanvas?(clear_entities: boolean): void;
 }
 
 /**
@@ -87,10 +87,10 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 		this.registerLabelFactory(new DefaultLabelFactory());
 	}
 
-	repaintCanvas() {
+	repaintCanvas(clear_entities = true) {
 		this.iterateListeners(listener => {
 			if (listener.repaintCanvas) {
-				listener.repaintCanvas();
+				listener.repaintCanvas(clear_entities);
 			}
 		});
 	}

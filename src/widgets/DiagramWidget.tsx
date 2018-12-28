@@ -125,8 +125,10 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 			document: document,
 			renderedNodes: true,
 			diagramEngineListener: this.props.diagramEngine.addListener({
-				repaintCanvas: () => {
-					this.repaint = true
+				repaintCanvas: (clear_entities) => {
+					if(clear_entities){
+						this.repaint = true
+					}
 					this.forceUpdate();
 				}
 			})
